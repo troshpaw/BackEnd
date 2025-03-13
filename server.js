@@ -1,35 +1,20 @@
 const http = require('http');
+const fs = require('fs');
 
 const hostname = '127.0.0.1';
 const port = 3003;
 
-let requestsCount = 0;
+// let requestsCount = 0;
 
 const server = http.createServer((request, response) => {
 
-    if (request.url !== '/favicon.ico') {
-        requestsCount++;
-    }
-
     switch (request.url) {
         case '/':
-
-            setTimeout(() => {
-                response.write('IT-KAMASUTRA');
-                response.write(' Requests: ' + requestsCount);
+            fs.readFile('./pages/about.html', (err, data) => {
+                if (err) console.error(err);
+                else response.write(data);
                 response.end();
-            }, 3000);
-
-            // const start = new Date();
-
-            // while (new Date() - start < 3000) {
-            //     console.log(new Date() - start);
-            // }
-
-            // response.write('IT-KAMASUTRA');
-            // response.write(' Requests: ' + requestsCount);
-            // response.end();
-
+            });
             break;
 
         case '/courses':
@@ -47,10 +32,6 @@ const server = http.createServer((request, response) => {
             response.end();
             break;
     }
-
-    // response.write(' Requests: ' + requestsCount);
-    // response.end();
-
 })
 
 server.listen(port, hostname, () => {
