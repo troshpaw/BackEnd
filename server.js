@@ -4,8 +4,6 @@ const fs = require('fs');
 const hostname = '127.0.0.1';
 const port = 3003;
 
-// let requestsCount = 0;
-
 const server = http.createServer((request, response) => {
 
     switch (request.url) {
@@ -18,8 +16,10 @@ const server = http.createServer((request, response) => {
             break;
 
         case '/courses':
-            response.write('BACK + FRONT');
-            response.end();
+            setTimeout(() => {
+                response.write('BACK + FRONT');
+                response.end();
+            }, 3000);
             break;
 
         case '/students':
@@ -37,19 +37,3 @@ const server = http.createServer((request, response) => {
 server.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
-
-//// Example on nodejs.org:
-// const http = require('node:http');
-
-// const hostname = '127.0.0.1';
-// const port = 3000;
-
-// const server = http.createServer((req, res) => {
-//     res.statusCode = 200;
-//     res.setHeader('Content-Type', 'text/plain');
-//     res.end('Hello, World!\n');
-// });
-
-// server.listen(port, hostname, () => {
-//     console.log(`Server running at http://${hostname}:${port}/`);
-// });
