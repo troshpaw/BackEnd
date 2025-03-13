@@ -13,24 +13,44 @@ const server = http.createServer((request, response) => {
 
     switch (request.url) {
         case '/':
-            response.write('IT-KAMASUTRA');
+
+            setTimeout(() => {
+                response.write('IT-KAMASUTRA');
+                response.write(' Requests: ' + requestsCount);
+                response.end();
+            }, 3000);
+
+            // const start = new Date();
+
+            // while (new Date() - start < 3000) {
+            //     console.log(new Date() - start);
+            // }
+
+            // response.write('IT-KAMASUTRA');
+            // response.write(' Requests: ' + requestsCount);
+            // response.end();
+
             break;
 
         case '/courses':
             response.write('BACK + FRONT');
+            response.end();
             break;
 
         case '/students':
             response.write('STUDENTS');
+            response.end();
             break;
 
         default:
             response.write('404 not found');
+            response.end();
             break;
     }
 
-    response.write(' Requests: ' + requestsCount);
-    response.end();
+    // response.write(' Requests: ' + requestsCount);
+    // response.end();
+
 })
 
 server.listen(port, hostname, () => {
