@@ -4,15 +4,35 @@ const fs = require('fs');
 const hostname = '127.0.0.1';
 const port = 3003;
 
-const server = http.createServer((request, response) => {
+const readFile = (path) => {
+    return new Promise((resolve, reject) => {
+        fs.readFile(path, (err, data) => {
+            if (err) reject(err);
+            else resolve(data);
+        })
+    })
+}
+
+const server = http.createServer(async (request, response) => {
 
     switch (request.url) {
+
         case '/':
-            fs.readFile('./pages/about.html', (err, data) => {
-                if (err) console.error(err);
-                else response.write(data);
+            // fs.readFile('./pages/about.html', (err, data) => {
+            //     if (err) console.error(err);
+            //     else response.write(data);
+            //     response.end();
+            // });
+
+            try {
+                const data = await readFile('./pages/about.html');
+                response.write(data);
                 response.end();
-            });
+            } catch (error) {
+                response.write('something wrong');
+                response.end();
+            }
+
             break;
 
         case '/courses':
