@@ -1,1 +1,0 @@
-let one = () => console.log('one');

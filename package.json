@@ -1,0 +1,22 @@
+{
+  "name": "BackEnd",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/troshpaw/BackEnd.git",
+  "author": "Pavel Troshin <troshpaw@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "watch": "tsc -w",
+    "dev": "nodemon ./dist/index.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.14.0",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2"
+  }
+}
