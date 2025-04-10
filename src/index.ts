@@ -44,6 +44,11 @@ app.get('/courses/:id', (req, res) => {
 })
 
 app.post('/courses', (req, res) => {
+    if (!req.body.title) {
+        res.sendStatus(404);
+        return;
+    }
+
     const createdCourse = {
         id: db.courses.length + 1,
         // id: +(new Date()),
@@ -53,7 +58,7 @@ app.post('/courses', (req, res) => {
  
     db.courses.push(createdCourse);
 
-    res.json(createdCourse);
+    res.status(201).json(createdCourse);
 })
 
 app.listen(port, () => {
