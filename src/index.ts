@@ -3,10 +3,9 @@ import express from 'express';
 const app = express();
 const port = 3000;
 
-app.get('/', (req, res) => {
-    // res.send({ message: 'BACK-END' });
-    res.json({ message: 'IT-INCUBATOR' });
-})
+const jsonBodyMiddleware = express.json();
+app.use(jsonBodyMiddleware);
+// app.use(express.json());
 
 const db = {
     courses: [
@@ -16,6 +15,11 @@ const db = {
         { id: 4, title: 'devops' }
     ]
 };
+
+app.get('/', (req, res) => {
+    // res.send({ message: 'BACK-END' });
+    res.json({ message: 'IT-INCUBATOR' });
+})
 
 app.get('/courses', (req, res) => {
     let foundCourses = db.courses;
@@ -37,6 +41,19 @@ app.get('/courses/:id', (req, res) => {
     }
 
     res.json(foundCourse);
+})
+
+app.post('/courses', (req, res) => {
+    const createdCourse = {
+        id: db.courses.length + 1,
+        // id: +(new Date()),
+        title: req.body.title
+        // title: 'unknown'
+    }
+ 
+    db.courses.push(createdCourse);
+
+    res.json(createdCourse);
 })
 
 app.listen(port, () => {
