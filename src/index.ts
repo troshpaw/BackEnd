@@ -45,7 +45,7 @@ app.get('/courses/:id', (req, res) => {
 
 app.post('/courses', (req, res) => {
     if (!req.body.title) {
-        res.sendStatus(404);
+        res.sendStatus(400);
         return;
     }
 
@@ -59,11 +59,11 @@ app.post('/courses', (req, res) => {
     res.status(201).json(createdCourse);
 })
 
-app.delete('/courses', (req, res) => {
-    db.courses = db.courses.filter(course => course.title !== req.body.title);
+// app.delete('/courses', (req, res) => {
+//     db.courses = db.courses.filter(course => course.title !== req.body.title);
 
-    res.sendStatus(204);
-})
+//     res.sendStatus(204);
+// })
 
 app.delete('/courses/:id', (req, res) => {
     const arrayAfterDelete = db.courses.filter(course => course.id !== +req.params.id);
@@ -74,6 +74,24 @@ app.delete('/courses/:id', (req, res) => {
     }
     
     db.courses = arrayAfterDelete;
+    res.sendStatus(204);
+})
+
+app.put('/courses/:id', (req, res) => {
+    if (!req.body.title) {
+        res.sendStatus(400);
+        return;
+    }
+
+    const foundCourse = db.courses.find(course => course.id === +req.params.id)
+
+    if (!foundCourse) {
+        res.sendStatus(404);
+        return;
+    }
+
+    foundCourse.title = req.body.title;
+
     res.sendStatus(204);
 })
 
