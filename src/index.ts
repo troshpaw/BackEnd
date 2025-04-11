@@ -50,15 +50,31 @@ app.post('/courses', (req, res) => {
     }
 
     const createdCourse = {
-        id: db.courses.length + 1,
-        // id: +(new Date()),
+        id: db.courses[db.courses.length - 1].id + 1,
         title: req.body.title
-        // title: 'unknown'
     }
- 
+
     db.courses.push(createdCourse);
 
     res.status(201).json(createdCourse);
+})
+
+app.delete('/courses', (req, res) => {
+    db.courses = db.courses.filter(course => course.title !== req.body.title);
+
+    res.sendStatus(204);
+})
+
+app.delete('/courses/:id', (req, res) => {
+    const arrayAfterDelete = db.courses.filter(course => course.id !== +req.params.id);
+
+    if (db.courses.length === arrayAfterDelete.length) {
+        res.sendStatus(404);
+        return;
+    }
+    
+    db.courses = arrayAfterDelete;
+    res.sendStatus(204);
 })
 
 app.listen(port, () => {
