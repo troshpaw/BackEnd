@@ -7,7 +7,8 @@
   "license": "MIT",
   "scripts": {
     "watch": "tsc -w",
-    "dev": "nodemon ./dist/index.js"
+    "dev": "nodemon ./dist/index.js",
+    "devinspect": "nodemon --inspect ./dist/index.js"
   },
   "dependencies": {
     "express": "^5.1.0"
