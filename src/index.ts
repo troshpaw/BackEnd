@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 
-const app = express();
+export const app = express();
 const port = process.env.PORT || 3000;
 
 const HTTP_STATUSES = {
@@ -33,7 +33,8 @@ app.get('/courses', (req, res) => {
 
     if (req.query.title) {
         foundCourses = foundCourses
-            .filter(course => course.title.indexOf(req.query.title as string) > -1);
+            .filter(course => course.title
+                .indexOf(req.query.title as string) > -1);
     }
 
     if (foundCourses.length === 0) {
@@ -91,7 +92,8 @@ app.put('/courses/:id', (req, res) => {
         return;
     }
 
-    const foundCourse = db.courses.find(course => course.id === +req.params.id)
+    const foundCourse = db.courses
+        .find(course => course.id === +req.params.id)
 
     if (!foundCourse) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
