@@ -37,12 +37,14 @@ app.get('/courses', (req, res) => {
                 .indexOf(req.query.title as string) > -1);
     }
 
-    if (foundCourses.length === 0) {
-        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
-        return;
-    } else {
-        res.json(foundCourses);
-    }
+    // if (foundCourses.length === 0) {
+    //     res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+    //     return;
+    // } else {
+    //     res.status(200).json(foundCourses);
+    // }
+
+    res.status(200).json(foundCourses);
 })
 
 app.get('/courses/:id', (req, res) => {
@@ -102,6 +104,11 @@ app.put('/courses/:id', (req, res) => {
         foundCourse.title = req.body.title;
         res.status(HTTP_STATUSES.NO_CONTENT_204);
     }
+})
+
+app.delete('/__test__/data', (req, res) => {
+    db.courses = [];
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
 })
 
 app.listen(port, () => {
