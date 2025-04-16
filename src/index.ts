@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
 
 export const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
-const HTTP_STATUSES = {
+export const HTTP_STATUSES = {
     OK_200: 200,
     CREATED_201: 201,
     NO_CONTENT_204: 204,
@@ -59,19 +59,34 @@ app.get('/courses/:id', (req, res) => {
     }
 })
 
+// fetch('http://localhost:3001/courses', {
+//     method: 'POST',
+//     headers: { 'content-type': 'application/json;charset=utf-8' },
+//     body: JSON.stringify({ title: 'ML' })
+// })
+
 app.post('/courses', (req, res) => {
-    if (!req.body.title) {
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
-        return;
-    }
+    // if (!req.body.title) {
+    //     res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+    //     return;
+    // }
 
     const createdCourse = {
         id: db.courses[db.courses.length - 1].id + 1,
         title: req.body.title
     }
-
+    
     db.courses.push(createdCourse);
+    
 
+    //////////////////////////////////////////////////
+    if (!req.body.title) {
+        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+        return;
+    }
+    //////////////////////////////////////////////////
+    
+    
     res.status(HTTP_STATUSES.CREATED_201).json(createdCourse);
 })
 
