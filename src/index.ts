@@ -59,7 +59,7 @@ app.get('/courses/:id', (req, res) => {
     }
 })
 
-// fetch('http://localhost:3001/courses', {
+// fetch('http://localhost:3000/courses', {
 //     method: 'POST',
 //     headers: { 'content-type': 'application/json;charset=utf-8' },
 //     body: JSON.stringify({ title: 'ML' })
@@ -72,23 +72,15 @@ app.post('/courses', (req, res) => {
     }
 
     const createdCourse = {
-        id: db.courses[db.courses.length - 1].id + 1,
+        id: db.courses.length > 0
+            ? db.courses[db.courses.length - 1].id + 1
+            : 1,
         title: req.body.title
     }
 
     db.courses.push(createdCourse);
 
-
-    //////////////////////////////////////////////////
-    // if (!req.body.title) {
-    //     res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
-    //     return;
-    // }
-    //////////////////////////////////////////////////
-
-
-    // res.status(HTTP_STATUSES.CREATED_201).json(createdCourse);
-    res.status(HTTP_STATUSES.CREATED_201);
+    res.status(HTTP_STATUSES.CREATED_201).json(createdCourse);
 })
 
 app.delete('/courses/:id', (req, res) => {
@@ -106,7 +98,7 @@ app.delete('/courses/:id', (req, res) => {
 
 app.put('/courses/:id', (req, res) => {
     if (!req.body.title) {
-        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
         return;
     }
 
@@ -118,7 +110,7 @@ app.put('/courses/:id', (req, res) => {
         return;
     } else {
         foundCourse.title = req.body.title;
-        res.status(HTTP_STATUSES.NO_CONTENT_204);
+        res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
     }
 })
 

@@ -18,31 +18,65 @@ describe('/course', () => {
             .expect(HTTP_STATUSES.NOT_FOUND_404)
     })
 
-    // it(`should'nt created course with incorrect input data`, async () => {
-    //     const headers = { 'Content-Type': 'application/json;charset=utf-8' };
-    //     // const body = JSON.stringify({ title: 'ML' });
-    //     const body = { title: 'ML' };
-
-    //     await request(app)
-    //         .post('/courses')
-    //         .set(headers)
-    //         // .send({ title: '' })
-    //         .send(body)
-    //         .expect(HTTP_STATUSES.BAD_REQUEST_400)
-
-    //     // await request(app)
-    //     //     .get('/courses')
-    //     //     .expect(HTTP_STATUSES.OK_200, [])
-    // })
-
-    it(`should created course with correct input data`, async () => {
-        // const headers = { 'Content-Type': 'application/json;charset=utf-8' };
-        // const body = { title: 'ML' };
-
+    it(`should'nt created course with incorrect input data`, async () => {
         await request(app)
             .post('/courses')
-            .set({ 'Content-Type': 'application/json;charset=utf-8' })
+            .send({ title: '' })
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
+
+        await request(app)
+            .get('/courses')
+            .expect(HTTP_STATUSES.OK_200, [])
+    })
+
+    it(`should created course with correct input data`, async () => {
+        const createResponse = await request(app)
+            .post('/courses')
             .send({ title: 'ML' })
             .expect(HTTP_STATUSES.CREATED_201)
+
+        const createdCourse = createResponse.body;
+
+        // Testing with Jest:
+        expect(createdCourse).toEqual({
+            id: expect.any(Number),
+            title: 'ML'
+        })
+        /////////////////////
+
+        await request(app)
+        .get('/courses')
+        .expect(HTTP_STATUSES.OK_200, [createdCourse])
     })
+
+    it(`should'nt update course with incorrect input data`, async () => {
+        await request(app)
+            .put('/courses/1')
+            .send({ title: '' })
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
+
+        // await request(app)
+        //     .get('/courses')
+        //     .expect(HTTP_STATUSES.OK_200, [])
+    })
+
+    // it(`should update course with correct input data`, async () => {
+    //     const createResponse = await request(app)
+    //         .put('/courses/1')
+    //         .send({ title: 'DBA' })
+    //         .expect(HTTP_STATUSES.NO_CONTENT_204)
+
+    //     const updateCourse = createResponse.body;
+
+    //     // Testing with Jest:
+    //     expect(updateCourse).toEqual({
+    //         id: expect.any(Number),
+    //         title: 'DBA'
+    //     })
+    //     /////////////////////
+
+    //     await request(app)
+    //     .get('/courses')
+    //     .expect(HTTP_STATUSES.OK_200, [updateCourse])
+    // })
 })
