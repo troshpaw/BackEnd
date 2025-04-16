@@ -29,13 +29,15 @@ describe('/course', () => {
             .expect(HTTP_STATUSES.OK_200, [])
     })
 
+    let createdCourse: any = null;
+
     it(`should created course with correct input data`, async () => {
-        const createResponse = await request(app)
+        const createdResponse = await request(app)
             .post('/courses')
             .send({ title: 'ML' })
             .expect(HTTP_STATUSES.CREATED_201)
 
-        const createdCourse = createResponse.body;
+        createdCourse = createdResponse.body;
 
         // Testing with Jest:
         expect(createdCourse).toEqual({
@@ -45,38 +47,53 @@ describe('/course', () => {
         /////////////////////
 
         await request(app)
-        .get('/courses')
-        .expect(HTTP_STATUSES.OK_200, [createdCourse])
+            .get('/courses')
+            .expect(HTTP_STATUSES.OK_200, [createdCourse])
     })
 
     it(`should'nt update course with incorrect input data`, async () => {
         await request(app)
-            .put('/courses/1')
+            .put('/courses/' + createdCourse.id)
             .send({ title: '' })
             .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
-        // await request(app)
-        //     .get('/courses')
-        //     .expect(HTTP_STATUSES.OK_200, [])
+        await request(app)
+            .get('/courses/' + createdCourse.id)
+            .expect(HTTP_STATUSES.OK_200, createdCourse)
     })
 
-    // it(`should update course with correct input data`, async () => {
-    //     const createResponse = await request(app)
-    //         .put('/courses/1')
-    //         .send({ title: 'DBA' })
-    //         .expect(HTTP_STATUSES.NO_CONTENT_204)
+    it(`should'nt update course that not exist`, async () => {
+        await request(app)
+            .put('/courses/' + -100)
+            .send({ title: 'title' })
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
+    })
 
-    //     const updateCourse = createResponse.body;
+    it(`should update course with correct input data`, async () => {
+        await request(app)
+            .put('/courses/' + createdCourse.id)
+            .send({ title: 'DBA' })
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
 
-    //     // Testing with Jest:
-    //     expect(updateCourse).toEqual({
-    //         id: expect.any(Number),
-    //         title: 'DBA'
-    //     })
-    //     /////////////////////
+        await request(app)
+            .get('/courses/' + createdCourse.id)
+            .expect(HTTP_STATUSES.OK_200, {
+                ...createdCourse,
+                title: 'DBA'
+            })
+    })
 
-    //     await request(app)
-    //     .get('/courses')
-    //     .expect(HTTP_STATUSES.OK_200, [updateCourse])
-    // })
+    it(`should delete course`, async () => {
+        await request(app)
+            .delete('/courses/' + createdCourse.id)
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
+
+        await request(app)
+            .get('/courses/' + createdCourse.id)
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
+
+        await request(app)
+            .get('/courses/')
+            .expect(HTTP_STATUSES.OK_200, [])
+    })
 })

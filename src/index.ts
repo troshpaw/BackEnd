@@ -55,7 +55,7 @@ app.get('/courses/:id', (req, res) => {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
         return;
     } else {
-        res.json(foundCourse);
+        res.status(200).json(foundCourse);
     }
 })
 
@@ -110,7 +110,7 @@ app.put('/courses/:id', (req, res) => {
         return;
     } else {
         foundCourse.title = req.body.title;
-        res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+        res.status(HTTP_STATUSES.NO_CONTENT_204).json(foundCourse);
     }
 })
 
