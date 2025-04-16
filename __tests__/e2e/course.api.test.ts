@@ -18,20 +18,31 @@ describe('/course', () => {
             .expect(HTTP_STATUSES.NOT_FOUND_404)
     })
 
-    it(`should'nt created course with incorrect input data`, async () => {
-        const headers = { 'content-type': 'application/json;charset=utf-8' };
-        // const body = JSON.stringify({ title: 'ML' });
-        const body = { title: 'ML' };
+    // it(`should'nt created course with incorrect input data`, async () => {
+    //     const headers = { 'Content-Type': 'application/json;charset=utf-8' };
+    //     // const body = JSON.stringify({ title: 'ML' });
+    //     const body = { title: 'ML' };
+
+    //     await request(app)
+    //         .post('/courses')
+    //         .set(headers)
+    //         // .send({ title: '' })
+    //         .send(body)
+    //         .expect(HTTP_STATUSES.BAD_REQUEST_400)
+
+    //     // await request(app)
+    //     //     .get('/courses')
+    //     //     .expect(HTTP_STATUSES.OK_200, [])
+    // })
+
+    it(`should created course with correct input data`, async () => {
+        // const headers = { 'Content-Type': 'application/json;charset=utf-8' };
+        // const body = { title: 'ML' };
 
         await request(app)
             .post('/courses')
-            .set(headers)
-            // .send({ title: '' })
-            .send(body)
-            .expect(HTTP_STATUSES.BAD_REQUEST_400)
-
-        // await request(app)
-        //     .get('/courses')
-        //     .expect(HTTP_STATUSES.OK_200, [])
+            .set({ 'Content-Type': 'application/json;charset=utf-8' })
+            .send({ title: 'ML' })
+            .expect(HTTP_STATUSES.CREATED_201)
     })
 })

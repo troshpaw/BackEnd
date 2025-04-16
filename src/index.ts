@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 
 export const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 export const HTTP_STATUSES = {
     OK_200: 200,
@@ -66,28 +66,29 @@ app.get('/courses/:id', (req, res) => {
 // })
 
 app.post('/courses', (req, res) => {
-    // if (!req.body.title) {
-    //     res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
-    //     return;
-    // }
+    if (!req.body.title) {
+        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+        return;
+    }
 
     const createdCourse = {
         id: db.courses[db.courses.length - 1].id + 1,
         title: req.body.title
     }
-    
+
     db.courses.push(createdCourse);
-    
+
 
     //////////////////////////////////////////////////
-    if (!req.body.title) {
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
-        return;
-    }
+    // if (!req.body.title) {
+    //     res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+    //     return;
+    // }
     //////////////////////////////////////////////////
-    
-    
-    res.status(HTTP_STATUSES.CREATED_201).json(createdCourse);
+
+
+    // res.status(HTTP_STATUSES.CREATED_201).json(createdCourse);
+    res.status(HTTP_STATUSES.CREATED_201);
 })
 
 app.delete('/courses/:id', (req, res) => {
