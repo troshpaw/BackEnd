@@ -4,6 +4,7 @@ import { CreateCourseModel } from './models/CreateCourseModel';
 import { UpdateCourseModel } from './models/UpdateCourseModel';
 import { QueryCoursesModel } from './models/QueryCoursesModel';
 import { CourseViewModel } from './models/CourseViewModel';
+import { URIParamsCourseIdModelseViewModel } from './models/URIParamsCourseIdModel';
 
 export const app = express();
 const port = process.env.PORT || 3000;
@@ -22,17 +23,25 @@ app.use(jsonBodyMiddleware);
 
 type CourseType = {
     id: number,
-    title: string
+    title: string,
+    studentsCount: number
 }
 
 const db: { courses: CourseType[] } = {
     courses: [
-        { id: 1, title: 'front-end' },
-        { id: 2, title: 'back-end' },
-        { id: 3, title: 'fullstack' },
-        { id: 4, title: 'devops' }
+        { id: 1, title: 'front-end', studentsCount: 10 },
+        { id: 2, title: 'back-end', studentsCount: 10 },
+        { id: 3, title: 'fullstack', studentsCount: 10 },
+        { id: 4, title: 'devops', studentsCount: 10 }
     ]
 };
+
+const getCourseViewModel = (dbCourse: CourseType): CourseViewModel => {
+    return {
+        id: dbCourse.id,
+        title: dbCourse.title
+    }
+}
 
 app.get('/', (req, res: Response<{ message: string }>) => {
     res.json({ message: 'IT-INCUBATOR' });
@@ -55,10 +64,10 @@ app.get('/courses', (req: RequestWithQuery<QueryCoursesModel>,
     //     res.status(200).json(foundCourses);
     // }
 
-    res.status(HTTP_STATUSES.OK_200).json(foundCourses);
+    res.status(HTTP_STATUSES.OK_200).json(foundCourses.map(getCourseViewModel));
 })
 
-app.get('/courses/:id', (req: RequestWithParams<{ id: string }>, 
+app.get('/courses/:id', (req: RequestWithParams<URIParamsCourseIdModelseViewModel>,
     res: Response<CourseViewModel>) => {
     const foundCourse = db.courses
         .find(course => course.id === +req.params.id)
@@ -67,7 +76,7 @@ app.get('/courses/:id', (req: RequestWithParams<{ id: string }>,
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
         return;
     } else {
-        res.status(HTTP_STATUSES.OK_200).json(foundCourse);
+        res.status(HTTP_STATUSES.OK_200).json(getCourseViewModel(foundCourse));
     }
 })
 
@@ -84,19 +93,20 @@ app.post('/courses', (req: RequestWithBody<CreateCourseModel>,
         return;
     }
 
-    const createdCourse = {
+    const createdCourse: CourseType = {
         id: db.courses.length > 0
             ? db.courses[db.courses.length - 1].id + 1
             : 1,
-        title: req.body.title
+        title: req.body.title,
+        studentsCount: 0
     }
 
     db.courses.push(createdCourse);
 
-    res.status(HTTP_STATUSES.CREATED_201).json(createdCourse);
+    res.status(HTTP_STATUSES.CREATED_201).json(getCourseViewModel(createdCourse));
 })
 
-app.delete('/courses/:id', (req: RequestWithParams<{ id: string }>, res) => {
+app.delete('/courses/:id', (req: RequestWithParams<URIParamsCourseIdModelseViewModel>, res) => {
     const arrayAfterDelete = db.courses
         .filter(course => course.id !== +req.params.id);
 
@@ -109,7 +119,8 @@ app.delete('/courses/:id', (req: RequestWithParams<{ id: string }>, res) => {
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
 })
 
-app.put('/courses/:id', (req: RequestWithParamsAndBody<{ id: string }, UpdateCourseModel>,
+app.put('/courses/:id', (req: RequestWithParamsAndBody<URIParamsCourseIdModelseViewModel,
+    UpdateCourseModel>,
     res: Response<CourseViewModel>) => {
     if (!req.body.title) {
         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
@@ -124,7 +135,7 @@ app.put('/courses/:id', (req: RequestWithParamsAndBody<{ id: string }, UpdateCou
         return;
     } else {
         foundCourse.title = req.body.title;
-        res.status(HTTP_STATUSES.NO_CONTENT_204).json(foundCourse);
+        res.status(HTTP_STATUSES.NO_CONTENT_204).json(getCourseViewModel(foundCourse));
     }
 })
 
