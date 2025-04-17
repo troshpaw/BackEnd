@@ -5,9 +5,9 @@ import { UpdateCourseModel } from './models/UpdateCourseModel';
 import { QueryCoursesModel } from './models/QueryCoursesModel';
 import { CourseViewModel } from './models/CourseViewModel';
 import { URIParamsCourseIdModelseViewModel } from './models/URIParamsCourseIdModel';
+import { db } from './db/db';
 
 export const app = express();
-const port = process.env.PORT || 3000;
 
 export const HTTP_STATUSES = {
     OK_200: 200,
@@ -21,20 +21,20 @@ export const HTTP_STATUSES = {
 const jsonBodyMiddleware = express.json();
 app.use(jsonBodyMiddleware);
 
-type CourseType = {
+export type CourseType = {
     id: number,
     title: string,
     studentsCount: number
 }
 
-const db: { courses: CourseType[] } = {
-    courses: [
-        { id: 1, title: 'front-end', studentsCount: 10 },
-        { id: 2, title: 'back-end', studentsCount: 10 },
-        { id: 3, title: 'fullstack', studentsCount: 10 },
-        { id: 4, title: 'devops', studentsCount: 10 }
-    ]
-};
+// const db: { courses: CourseType[] } = {
+//     courses: [
+//         { id: 1, title: 'front-end', studentsCount: 10 },
+//         { id: 2, title: 'back-end', studentsCount: 10 },
+//         { id: 3, title: 'fullstack', studentsCount: 10 },
+//         { id: 4, title: 'devops', studentsCount: 10 }
+//     ]
+// };
 
 const getCourseViewModel = (dbCourse: CourseType): CourseViewModel => {
     return {
@@ -42,6 +42,7 @@ const getCourseViewModel = (dbCourse: CourseType): CourseViewModel => {
         title: dbCourse.title
     }
 }
+
 
 app.get('/', (req, res: Response<{ message: string }>) => {
     res.json({ message: 'IT-INCUBATOR' });
@@ -79,12 +80,6 @@ app.get('/courses/:id', (req: RequestWithParams<URIParamsCourseIdModelseViewMode
         res.status(HTTP_STATUSES.OK_200).json(getCourseViewModel(foundCourse));
     }
 })
-
-// fetch('http://localhost:3000/courses', {
-//     method: 'POST',
-//     headers: { 'content-type': 'application/json;charset=utf-8' },
-//     body: JSON.stringify({ title: 'ML' })
-// })
 
 app.post('/courses', (req: RequestWithBody<CreateCourseModel>,
     res: Response<CourseViewModel>) => {
@@ -139,10 +134,14 @@ app.put('/courses/:id', (req: RequestWithParamsAndBody<URIParamsCourseIdModelseV
     }
 })
 
+
 app.delete('/__test__/data', (req, res) => {
     db.courses = [];
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
 })
+
+
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
