@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { Router } from "express";
 import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from '../types';
 import { CreateCourseModel } from '../models/CreateCourseModel';
 import { UpdateCourseModel } from '../models/UpdateCourseModel';
@@ -6,12 +7,8 @@ import { QueryCoursesModel } from '../models/QueryCoursesModel';
 import { CourseViewModel } from '../models/CourseViewModel';
 import { URIParamsCourseIdModelseViewModel } from '../models/URIParamsCourseIdModel';
 import { db } from '../db/db';
-
 import { CourseType } from '../db/db';
 import { HTTP_STATUSES } from '../utils';
-
-
-import { Router } from "express";
 
 export const coursesRouter = Router({});
 
