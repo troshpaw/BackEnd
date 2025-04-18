@@ -1,11 +1,13 @@
 import express, { Request, Response } from 'express';
-import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from './types';
-import { CreateCourseModel } from './models/CreateCourseModel';
-import { UpdateCourseModel } from './models/UpdateCourseModel';
-import { QueryCoursesModel } from './models/QueryCoursesModel';
-import { CourseViewModel } from './models/CourseViewModel';
-import { URIParamsCourseIdModelseViewModel } from './models/URIParamsCourseIdModel';
-import { db } from './db/db';
+import { coursesRouter } from './routes/courses';
+import { testsRouter } from './routes/tests';
+// import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from './types';
+// import { CreateCourseModel } from './models/CreateCourseModel';
+// import { UpdateCourseModel } from './models/UpdateCourseModel';
+// import { QueryCoursesModel } from './models/QueryCoursesModel';
+// import { CourseViewModel } from './models/CourseViewModel';
+// import { URIParamsCourseIdModelseViewModel } from './models/URIParamsCourseIdModel';
+// import { db } from './db/db';
 
 export const app = express();
 
@@ -20,6 +22,9 @@ export const HTTP_STATUSES = {
 
 const jsonBodyMiddleware = express.json();
 app.use(jsonBodyMiddleware);
+
+app.use('/courses', coursesRouter);
+app.use('/__test__', testsRouter)
 
 export type CourseType = {
     id: number,
@@ -36,109 +41,113 @@ export type CourseType = {
 //     ]
 // };
 
-const getCourseViewModel = (dbCourse: CourseType): CourseViewModel => {
-    return {
-        id: dbCourse.id,
-        title: dbCourse.title
-    }
-}
+// const getCourseViewModel = (dbCourse: CourseType): CourseViewModel => {
+//     return {
+//         id: dbCourse.id,
+//         title: dbCourse.title
+//     }
+// }
+
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+// app.get('/', (req, res: Response<{ message: string }>) => {
+//     res.json({ message: 'IT-INCUBATOR' });
+// })
+//////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
 
 
-app.get('/', (req, res: Response<{ message: string }>) => {
-    res.json({ message: 'IT-INCUBATOR' });
-})
+// app.get('/courses', (req: RequestWithQuery<QueryCoursesModel>,
+//     res: Response<CourseViewModel[]>) => {
+//     let foundCourses = db.courses;
 
-app.get('/courses', (req: RequestWithQuery<QueryCoursesModel>,
-    res: Response<CourseViewModel[]>) => {
-    let foundCourses = db.courses;
+//     if (req.query.title) {
+//         foundCourses = foundCourses
+//             .filter(course => course.title
+//                 .indexOf(req.query.title as string) > -1);
+//     }
 
-    if (req.query.title) {
-        foundCourses = foundCourses
-            .filter(course => course.title
-                .indexOf(req.query.title as string) > -1);
-    }
+//     // if (foundCourses.length === 0) {
+//     //     res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+//     //     return;
+//     // } else {
+//     //     res.status(200).json(foundCourses);
+//     // }
 
-    // if (foundCourses.length === 0) {
-    //     res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
-    //     return;
-    // } else {
-    //     res.status(200).json(foundCourses);
-    // }
+//     res.status(HTTP_STATUSES.OK_200).json(foundCourses.map(getCourseViewModel));
+// })
 
-    res.status(HTTP_STATUSES.OK_200).json(foundCourses.map(getCourseViewModel));
-})
+// app.get('/courses/:id', (req: RequestWithParams<URIParamsCourseIdModelseViewModel>,
+//     res: Response<CourseViewModel>) => {
+//     const foundCourse = db.courses
+//         .find(course => course.id === +req.params.id)
 
-app.get('/courses/:id', (req: RequestWithParams<URIParamsCourseIdModelseViewModel>,
-    res: Response<CourseViewModel>) => {
-    const foundCourse = db.courses
-        .find(course => course.id === +req.params.id)
+//     if (!foundCourse) {
+//         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+//         return;
+//     } else {
+//         res.status(HTTP_STATUSES.OK_200).json(getCourseViewModel(foundCourse));
+//     }
+// })
 
-    if (!foundCourse) {
-        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
-        return;
-    } else {
-        res.status(HTTP_STATUSES.OK_200).json(getCourseViewModel(foundCourse));
-    }
-})
+// app.post('/courses', (req: RequestWithBody<CreateCourseModel>,
+//     res: Response<CourseViewModel>) => {
+//     if (!req.body.title) {
+//         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+//         return;
+//     }
 
-app.post('/courses', (req: RequestWithBody<CreateCourseModel>,
-    res: Response<CourseViewModel>) => {
-    if (!req.body.title) {
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
-        return;
-    }
+//     const createdCourse: CourseType = {
+//         id: db.courses.length > 0
+//             ? db.courses[db.courses.length - 1].id + 1
+//             : 1,
+//         title: req.body.title,
+//         studentsCount: 0
+//     }
 
-    const createdCourse: CourseType = {
-        id: db.courses.length > 0
-            ? db.courses[db.courses.length - 1].id + 1
-            : 1,
-        title: req.body.title,
-        studentsCount: 0
-    }
+//     db.courses.push(createdCourse);
 
-    db.courses.push(createdCourse);
+//     res.status(HTTP_STATUSES.CREATED_201).json(getCourseViewModel(createdCourse));
+// })
 
-    res.status(HTTP_STATUSES.CREATED_201).json(getCourseViewModel(createdCourse));
-})
+// app.delete('/courses/:id', (req: RequestWithParams<URIParamsCourseIdModelseViewModel>, res) => {
+//     const arrayAfterDelete = db.courses
+//         .filter(course => course.id !== +req.params.id);
 
-app.delete('/courses/:id', (req: RequestWithParams<URIParamsCourseIdModelseViewModel>, res) => {
-    const arrayAfterDelete = db.courses
-        .filter(course => course.id !== +req.params.id);
+//     if (db.courses.length === arrayAfterDelete.length) {
+//         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+//         return;
+//     }
 
-    if (db.courses.length === arrayAfterDelete.length) {
-        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
-        return;
-    }
+//     db.courses = arrayAfterDelete;
+//     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+// })
 
-    db.courses = arrayAfterDelete;
-    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
-})
+// app.put('/courses/:id', (req: RequestWithParamsAndBody<URIParamsCourseIdModelseViewModel,
+//     UpdateCourseModel>,
+//     res: Response<CourseViewModel>) => {
+//     if (!req.body.title) {
+//         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+//         return;
+//     }
 
-app.put('/courses/:id', (req: RequestWithParamsAndBody<URIParamsCourseIdModelseViewModel,
-    UpdateCourseModel>,
-    res: Response<CourseViewModel>) => {
-    if (!req.body.title) {
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
-        return;
-    }
+//     const foundCourse = db.courses
+//         .find(course => course.id === +req.params.id)
 
-    const foundCourse = db.courses
-        .find(course => course.id === +req.params.id)
-
-    if (!foundCourse) {
-        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
-        return;
-    } else {
-        foundCourse.title = req.body.title;
-        res.status(HTTP_STATUSES.NO_CONTENT_204).json(getCourseViewModel(foundCourse));
-    }
-})
+//     if (!foundCourse) {
+//         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+//         return;
+//     } else {
+//         foundCourse.title = req.body.title;
+//         res.status(HTTP_STATUSES.NO_CONTENT_204).json(getCourseViewModel(foundCourse));
+//     }
+// })
 
 
-app.delete('/__test__/data', (req, res) => {
-    db.courses = [];
-    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
-})
+// app.delete('/__test__/data', (req, res) => {
+//     db.courses = [];
+//     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+// })
 
 
 const port = process.env.PORT || 3000;
