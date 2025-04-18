@@ -1,4 +1,9 @@
-import { CourseType } from '../index';
+
+export type CourseType = {
+    id: number,
+    title: string,
+    studentsCount: number
+}
 
 export const db: { courses: CourseType[] } = {
     courses: [

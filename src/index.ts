@@ -1,6 +1,6 @@
-import express, { Request, Response } from 'express';
-import { coursesRouter } from './routes/courses';
-import { testsRouter } from './routes/tests';
+// import express, { Request, Response } from 'express';
+// import { coursesRouter } from './routes/courses';
+// import { testsRouter } from './routes/tests';
 // import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from './types';
 // import { CreateCourseModel } from './models/CreateCourseModel';
 // import { UpdateCourseModel } from './models/UpdateCourseModel';
@@ -9,28 +9,30 @@ import { testsRouter } from './routes/tests';
 // import { URIParamsCourseIdModelseViewModel } from './models/URIParamsCourseIdModel';
 // import { db } from './db/db';
 
-export const app = express();
+import { app } from "./app";
 
-export const HTTP_STATUSES = {
-    OK_200: 200,
-    CREATED_201: 201,
-    NO_CONTENT_204: 204,
+// export const app = express();
 
-    BAD_REQUEST_400: 400,
-    NOT_FOUND_404: 404
-}
+// export const HTTP_STATUSES = {
+//     OK_200: 200,
+//     CREATED_201: 201,
+//     NO_CONTENT_204: 204,
 
-const jsonBodyMiddleware = express.json();
-app.use(jsonBodyMiddleware);
+//     BAD_REQUEST_400: 400,
+//     NOT_FOUND_404: 404
+// }
 
-app.use('/courses', coursesRouter);
-app.use('/__test__', testsRouter)
+// const jsonBodyMiddleware = express.json();
+// app.use(jsonBodyMiddleware);
 
-export type CourseType = {
-    id: number,
-    title: string,
-    studentsCount: number
-}
+// app.use('/courses', coursesRouter);
+// app.use('/__test__', testsRouter)
+
+// export type CourseType = {
+//     id: number,
+//     title: string,
+//     studentsCount: number
+// }
 
 // const db: { courses: CourseType[] } = {
 //     courses: [

@@ -1,5 +1,5 @@
 import { db } from '../db/db';
-import { HTTP_STATUSES } from '../index';
+import { HTTP_STATUSES } from '../utils';
 
 import { Router } from "express";
 
