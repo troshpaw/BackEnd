@@ -7,7 +7,7 @@ import { QueryCoursesModel } from '../models/QueryCoursesModel';
 import { CourseViewModel } from '../models/CourseViewModel';
 import { URIParamsCourseIdModelseViewModel } from '../models/URIParamsCourseIdModel';
 import { HTTP_STATUSES } from '../utils';
-import { coursesRepository } from '../repositories/courses';
+import { coursesRepository } from '../repositories/coursesRepository';
 
 export const coursesRouter = Router({});
 
