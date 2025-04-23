@@ -34,21 +34,22 @@ coursesRouter.get('/:id', (req: RequestWithParams<URIParamsCourseIdModelseViewMo
 })
 
 coursesRouter.post('/',
-    body('title').isLength({ min: 3, max: 10 }),
+    body('title').isLength({ min: 1, max: 10 }),
 
-    // (req: RequestWithBody<CreateCourseModel>, res: Response<CourseViewModel>) => {
-    (req: Request, res: Response) => {
+    (req: RequestWithBody<CreateCourseModel>, res: Response<CourseViewModel>) => {
+    // (req: Request, res: Response) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            // return res.status(HTTP_STATUSES.BAD_REQUEST_400).json({ errors: errors.array() })
-            res.status(HTTP_STATUSES.BAD_REQUEST_400).json({ errors: errors.array() })
-        }
-
-        if (!req.body.title) {
+            // res.status(HTTP_STATUSES.BAD_REQUEST_400).json({ errors: errors.array() });
             res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
             return;
         }
+
+        // if (!req.body.title) {
+        //     res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+        //     return;
+        // }
 
         const createdCourse = coursesRepository.createCourse(req.body.title)
 
