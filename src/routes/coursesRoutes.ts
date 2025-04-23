@@ -8,6 +8,7 @@ import { CourseViewModel } from '../models/CourseViewModel';
 import { URIParamsCourseIdModelseViewModel } from '../models/URIParamsCourseIdModel';
 import { HTTP_STATUSES } from '../utils';
 import { coursesRepository } from '../repositories/coursesRepository';
+import { body, validationResult } from 'express-validator';
 
 export const coursesRouter = Router({});
 
@@ -32,18 +33,28 @@ coursesRouter.get('/:id', (req: RequestWithParams<URIParamsCourseIdModelseViewMo
     }
 })
 
-coursesRouter.post('/', (req: RequestWithBody<CreateCourseModel>,
-    res: Response<CourseViewModel>) => {
+coursesRouter.post('/',
+    body('title').isLength({ min: 3, max: 10 }),
 
-    if (!req.body.title) {
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
-        return;
+    // (req: RequestWithBody<CreateCourseModel>, res: Response<CourseViewModel>) => {
+    // (req: Request, res: Response) => {
+    (req: any, res: any) => {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(HTTP_STATUSES.BAD_REQUEST_400).json({ errors: errors.array() })
+        }
+
+        if (!req.body.title) {
+            res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+            return;
+        }
+
+        const createdCourse = coursesRepository.createCourse(req.body.title)
+
+        res.status(HTTP_STATUSES.CREATED_201).json(createdCourse);
     }
-
-    const createdCourse = coursesRepository.createCourse(req.body.title)
-
-    res.status(HTTP_STATUSES.CREATED_201).json(createdCourse);
-})
+)
 
 coursesRouter.put('/:id', (req: RequestWithParamsAndBody<URIParamsCourseIdModelseViewModel,
     UpdateCourseModel>,
