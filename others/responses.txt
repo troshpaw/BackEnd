@@ -4,3 +4,5 @@ fetch('http://localhost:3000/courses', {
     headers: { 'content-type': 'application/json;charset=utf-8' },
     body: JSON.stringify({ title: 'ML' })
 })
+.then(response => response.json())
+.then(json => console.log(json))
