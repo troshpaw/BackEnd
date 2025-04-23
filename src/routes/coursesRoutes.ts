@@ -37,12 +37,12 @@ coursesRouter.post('/',
     body('title').isLength({ min: 3, max: 10 }),
 
     // (req: RequestWithBody<CreateCourseModel>, res: Response<CourseViewModel>) => {
-    // (req: Request, res: Response) => {
-    (req: any, res: any) => {
+    (req: Request, res: Response) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(HTTP_STATUSES.BAD_REQUEST_400).json({ errors: errors.array() })
+            // return res.status(HTTP_STATUSES.BAD_REQUEST_400).json({ errors: errors.array() })
+            res.status(HTTP_STATUSES.BAD_REQUEST_400).json({ errors: errors.array() })
         }
 
         if (!req.body.title) {
