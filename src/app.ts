@@ -1,7 +1,7 @@
 import express from 'express';
 import { coursesRouter } from './routes/coursesRoutes';
 import { testsRouter } from './routes/testsRoutes';
-// import { authGuardMiddleware } from './middleware';
+// import { authGuardMiddleware } from './middlewares/middlewares';
 
 export const app = express();
 

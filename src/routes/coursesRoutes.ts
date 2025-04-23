@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Router } from "express";
 import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from '../types';
 import { CreateCourseModel } from '../models/CreateCourseModel';
@@ -9,6 +9,9 @@ import { URIParamsCourseIdModelseViewModel } from '../models/URIParamsCourseIdMo
 import { HTTP_STATUSES } from '../utils';
 import { coursesRepository } from '../repositories/coursesRepository';
 import { body, validationResult } from 'express-validator';
+import { inputValidationMiddlware } from '../middlewares/middlewares';
+
+const titleValidation = body('title').isLength({ min: 1, max: 10 }).withMessage('Title length from 1 to 10 symbols.');
 
 export const coursesRouter = Router({});
 
@@ -34,17 +37,18 @@ coursesRouter.get('/:id', (req: RequestWithParams<URIParamsCourseIdModelseViewMo
 })
 
 coursesRouter.post('/',
-    body('title').isLength({ min: 1, max: 10 }),
+    titleValidation,
+    inputValidationMiddlware,
 
-    (req: RequestWithBody<CreateCourseModel>, res: Response<CourseViewModel>) => {
-    // (req: Request, res: Response) => {
+    // (req: RequestWithBody<CreateCourseModel>, res: Response<CourseViewModel>) => {
+    (req: Request, res: Response) => {
 
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            // res.status(HTTP_STATUSES.BAD_REQUEST_400).json({ errors: errors.array() });
-            res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
-            return;
-        }
+        // const errors = validationResult(req);
+        // if (!errors.isEmpty()) {
+        //     // res.status(HTTP_STATUSES.BAD_REQUEST_400).json({ errors: errors.array() });
+        //     res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+        //     return;
+        // }
 
         // if (!req.body.title) {
         //     res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
@@ -57,25 +61,36 @@ coursesRouter.post('/',
     }
 )
 
-coursesRouter.put('/:id', (req: RequestWithParamsAndBody<URIParamsCourseIdModelseViewModel,
-    UpdateCourseModel>,
-    res: Response<CourseViewModel>) => {
+coursesRouter.put('/:id',
+    titleValidation,
+    inputValidationMiddlware,
 
-    if (!req.body.title) {
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
-        return;
-    }
+    // (req: RequestWithParamsAndBody<URIParamsCourseIdModelseViewModel, UpdateCourseModel>, res: Response<CourseViewModel>) => {
+    (req: Request, res: Response) => {
 
-    const isUpdate = coursesRepository.updateCourse(+req.params.id, req.body.title);
 
-    if (!isUpdate) {
-        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
-        return;
-    } else {
-        const updatedCourse = coursesRepository.findCourseOnId(+req.params.id)
-        res.status(HTTP_STATUSES.NO_CONTENT_204).json(updatedCourse);
-    }
-})
+        // const errors = validationResult(req);
+        // if (!errors.isEmpty()) {
+        //     // res.status(HTTP_STATUSES.BAD_REQUEST_400).json({ errors: errors.array() });
+        //     res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+        //     return;
+        // }
+
+        // if (!req.body.title) {
+        //     res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+        //     return;
+        // }
+
+        const isUpdate = coursesRepository.updateCourse(+req.params.id, req.body.title);
+
+        if (!isUpdate) {
+            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+            return;
+        } else {
+            const updatedCourse = coursesRepository.findCourseOnId(+req.params.id)
+            res.status(HTTP_STATUSES.NO_CONTENT_204).json(updatedCourse);
+        }
+    })
 
 coursesRouter.delete('/:id', (req: RequestWithParams<URIParamsCourseIdModelseViewModel>, res) => {
 

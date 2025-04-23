@@ -1,5 +1,7 @@
 import { NextFunction } from 'express';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { validationResult } from 'express-validator';
+import { HTTP_STATUSES } from '../utils';
 
 ///////// Middleware - lesson 19 /////////
 
@@ -53,3 +55,16 @@ export const authGuardMiddleware = (req: Request, res: Response, next: NextFunct
 // app.get('/account', (req, res: Response<{ message: string }>) => {
 //     res.json({ message: 'Hello!' + ' ' + 'Requests: ' + requestCount });
 // })
+
+
+////////////////// Lesson 20 //////////////////
+
+export const inputValidationMiddlware = (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(HTTP_STATUSES.BAD_REQUEST_400).json({ errors: errors.array() });
+        // res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+    } else {
+        next();
+    }
+}
