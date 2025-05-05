@@ -1,3 +1,19 @@
+import { MongoClient } from "mongodb";
+
+const url = 'myUrl';
+const client = new MongoClient(url);
+
+const dbName = 'myDbName';
+
+export const connectDB = async () => {
+    // await client.connect();
+    // console.log('Connected succesfully to DB');
+
+    // const db = client.db(dbName);
+    // const collections = db.collection('myCollection');
+
+    // return 'done';
+}
 
 export type CourseType = {
     id: number,
