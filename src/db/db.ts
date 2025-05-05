@@ -1,18 +1,17 @@
 import { MongoClient } from "mongodb";
 
-const mongoUri = process.env.mongoURI || 'mongoDB://localhost:27017';
+const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
+const DB_NAME = process.env.DB_NAME || 'yotube';
 
-export const client = new MongoClient(mongoUri);
+export const client = new MongoClient(MONGO_URI);
 
 export const connectDB = async () => {
     try {
         await client.connect();
-        console.log('Connected succesfully to DB');
-
-        await client.db('students').command({ping: 1});
-        console.log('Connected successfully to mongo server');
+        await client.db(DB_NAME).command({ ping: 1 });
+        console.log('Connected successfully to the mongo server');
     } catch (error) {
-        console.log('Can not connect to mongo server');
+        console.log('Unable to connect to the mongo server');
         await client.close();
     }
 }
