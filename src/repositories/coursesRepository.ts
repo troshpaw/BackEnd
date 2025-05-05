@@ -10,7 +10,7 @@ const getCourseViewModel = (dbCourse: CourseType): CourseViewModel => {
 }
 
 export const coursesRepository = {
-    findCourses(title: string | null | undefined) {
+    async findCourses(title: string | null | undefined) {
         if (title) {
             let filteredCourses = db.courses.filter(course => course.title.indexOf(title as string) > -1);
             return filteredCourses.map(getCourseViewModel);
@@ -19,7 +19,7 @@ export const coursesRepository = {
         }
     },
 
-    findCourseOnId(id: number) {
+    async findCourseOnId(id: number) {
         const foundCourseOnId = db.courses.find(course => course.id === id);
 
         if (!foundCourseOnId) {
@@ -30,7 +30,7 @@ export const coursesRepository = {
 
     },
 
-    createCourse(title: string) {
+    async createCourse(title: string) {
         const createdCourse: CourseType = {
             id: db.courses.length > 0
                 ? db.courses[db.courses.length - 1].id + 1
@@ -44,7 +44,7 @@ export const coursesRepository = {
         return (getCourseViewModel(createdCourse));
     },
 
-    updateCourse(id: number, title: string) {
+    async updateCourse(id: number, title: string) {
         const foundCourseOnId = db.courses.find(course => course.id === id);
 
         if (!foundCourseOnId) {
@@ -55,7 +55,7 @@ export const coursesRepository = {
         }
     },
 
-    deleteCourse(id: number) {
+    async deleteCourse(id: number) {
         const arrayAfterDelete = db.courses.filter(course => course.id !== id);
 
         if (db.courses.length === arrayAfterDelete.length) {
