@@ -1,18 +1,20 @@
 import { MongoClient } from "mongodb";
 
-const url = 'myUrl';
-const client = new MongoClient(url);
+const mongoUri = process.env.mongoURI || 'mongoDB://localhost:27017';
 
-const dbName = 'myDbName';
+export const client = new MongoClient(mongoUri);
 
 export const connectDB = async () => {
-    // await client.connect();
-    // console.log('Connected succesfully to DB');
+    try {
+        await client.connect();
+        console.log('Connected succesfully to DB');
 
-    // const db = client.db(dbName);
-    // const collections = db.collection('myCollection');
-
-    // return 'done';
+        await client.db('students').command({ping: 1});
+        console.log('Connected successfully to mongo server');
+    } catch (error) {
+        console.log('Can not connect to mongo server');
+        await client.close();
+    }
 }
 
 export type CourseType = {
