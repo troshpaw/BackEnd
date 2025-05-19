@@ -1,17 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
 import { Router } from "express";
-import { RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery } from '../types';
+import {
+    RequestWithBody,
+    RequestWithParams,
+    RequestWithParamsAndBody,
+    RequestWithQuery
+} from '../types';
 import { CreateCourseModel } from '../models/CreateCourseModel';
 import { UpdateCourseModel } from '../models/UpdateCourseModel';
 import { QueryCoursesModel } from '../models/QueryCoursesModel';
 import { CourseViewModel } from '../models/CourseViewModel';
 import { URIParamsCourseIdModelseViewModel } from '../models/URIParamsCourseIdModel';
 import { HTTP_STATUSES } from '../utils';
-import { coursesRepository } from '../repositories/coursesRepository';
+import { coursesRepository } from '../repositories/coursesInMemoryRepository';
 import { body, validationResult } from 'express-validator';
 import { inputValidationMiddlware } from '../middlewares/middlewares';
 
-const titleValidation = body('title').isLength({ min: 1, max: 10 }).withMessage('Title length from 1 to 10 symbols.');
+const titleValidation = body('title').isLength({ min: 1, max: 10 })
+    .withMessage('Title length from 1 to 10 symbols.');
 
 export const coursesRouter = Router({});
 
@@ -93,15 +99,15 @@ coursesRouter.put('/:id',
         }
     })
 
-coursesRouter.delete('/:id', 
+coursesRouter.delete('/:id',
     async (req: RequestWithParams<URIParamsCourseIdModelseViewModel>, res) => {
 
-    const isDeleted = await coursesRepository.deleteCourse(+req.params.id)
+        const isDeleted = await coursesRepository.deleteCourse(+req.params.id)
 
-    if (!isDeleted) {
-        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
-        return;
-    } else {
-        res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
-    }
-})
+        if (!isDeleted) {
+            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+            return;
+        } else {
+            res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+        }
+    })

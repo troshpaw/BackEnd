@@ -10,6 +10,7 @@ const getCourseViewModel = (dbCourse: CourseType): CourseViewModel => {
 }
 
 export const coursesRepository = {
+    
     async findCourses(title: string | null | undefined) {
         if (title) {
             let filteredCourses = db.courses.filter(course => course.title.indexOf(title as string) > -1);
