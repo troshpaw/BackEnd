@@ -12,7 +12,7 @@ import { QueryCoursesModel } from '../models/QueryCoursesModel';
 import { CourseViewModel } from '../models/CourseViewModel';
 import { URIParamsCourseIdModelseViewModel } from '../models/URIParamsCourseIdModel';
 import { HTTP_STATUSES } from '../utils';
-import { coursesRepository } from '../repositories/coursesInMemoryRepository';
+import { coursesRepository } from '../repositories/coursesDBRepository';
 import { body, validationResult } from 'express-validator';
 import { inputValidationMiddlware } from '../middlewares/middlewares';
 
@@ -22,7 +22,8 @@ const titleValidation = body('title').isLength({ min: 1, max: 10 })
 export const coursesRouter = Router({});
 
 coursesRouter.get('/',
-    async (req: RequestWithQuery<QueryCoursesModel>, res: Response<CourseViewModel[]>) => {
+    async (req: RequestWithQuery<QueryCoursesModel>,
+           res: Response<CourseViewModel[]>) => {
         // (req: RequestWithQuery<QueryCoursesModel>, res: Response<Promise<CourseViewModel[]>>) => {
 
         const foundCourses = await coursesRepository.findCourses(req.query.title?.toString());
@@ -31,7 +32,8 @@ coursesRouter.get('/',
     })
 
 coursesRouter.get('/:id',
-    async (req: RequestWithParams<URIParamsCourseIdModelseViewModel>, res: Response<CourseViewModel>) => {
+    async (req: RequestWithParams<URIParamsCourseIdModelseViewModel>,
+           res: Response<CourseViewModel>) => {
 
         const foundCourse = await coursesRepository.findCourseOnId(+req.params.id);
 
@@ -47,8 +49,10 @@ coursesRouter.post('/',
     titleValidation,
     inputValidationMiddlware,
 
-    // (req: RequestWithBody<CreateCourseModel>, res: Response<CourseViewModel>) => {
-    async (req: Request, res: Response) => {
+    // (req: RequestWithBody<CreateCourseModel>,
+    // res: Response<CourseViewModel>) => {
+    async (req: Request,
+           res: Response) => {
 
         // const errors = validationResult(req);
         // if (!errors.isEmpty()) {
@@ -72,8 +76,10 @@ coursesRouter.put('/:id',
     titleValidation,
     inputValidationMiddlware,
 
-    // (req: RequestWithParamsAndBody<URIParamsCourseIdModelseViewModel, UpdateCourseModel>, res: Response<CourseViewModel>) => {
-    async (req: Request, res: Response) => {
+    // (req: RequestWithParamsAndBody<URIParamsCourseIdModelsViewModel, UpdateCourseModel>,
+    // res: Response<CourseViewModel>) => {
+    async (req: Request,
+           res: Response) => {
 
 
         // const errors = validationResult(req);
@@ -100,7 +106,8 @@ coursesRouter.put('/:id',
     })
 
 coursesRouter.delete('/:id',
-    async (req: RequestWithParams<URIParamsCourseIdModelseViewModel>, res) => {
+    async (req: RequestWithParams<URIParamsCourseIdModelseViewModel>,
+           res) => {
 
         const isDeleted = await coursesRepository.deleteCourse(+req.params.id)
 
