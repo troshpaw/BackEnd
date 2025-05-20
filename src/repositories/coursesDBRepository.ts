@@ -10,7 +10,9 @@ const getCourseViewModel = (dbCourse: CourseType): CourseViewModel => {
 }
 
 export const coursesRepository = {
-    async findCourses(title: string | null | undefined) {
+
+    // async findCourses(title: string | null | undefined) {
+    async findCourses(title: string | null | undefined): Promise<CourseType[]> {
 
         if (title) {
             return client.db(DB_NAME).collection<CourseType>('courses').find({title: {$regex: title}}).toArray();

@@ -21,6 +21,7 @@ const titleValidation = body('title').isLength({ min: 1, max: 10 })
 
 export const coursesRouter = Router({});
 
+
 coursesRouter.get('/',
     async (req: RequestWithQuery<QueryCoursesModel>,
            res: Response<CourseViewModel[]>) => {
@@ -30,6 +31,7 @@ coursesRouter.get('/',
 
         res.status(HTTP_STATUSES.OK_200).json(foundCourses);
     })
+
 
 coursesRouter.get('/:id',
     async (req: RequestWithParams<URIParamsCourseIdModelseViewModel>,
