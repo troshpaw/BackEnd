@@ -1,26 +1,25 @@
-import { NextFunction, Request, Response } from 'express';
-import { Router } from "express";
+import {NextFunction, Request, Response} from 'express';
+import {Router} from "express";
 import {
     RequestWithBody,
     RequestWithParams,
     RequestWithParamsAndBody,
     RequestWithQuery
 } from '../types';
-import { CreateCourseModel } from '../models/CreateCourseModel';
-import { UpdateCourseModel } from '../models/UpdateCourseModel';
-import { QueryCoursesModel } from '../models/QueryCoursesModel';
-import { CourseViewModel } from '../models/CourseViewModel';
-import { URIParamsCourseIdModelseViewModel } from '../models/URIParamsCourseIdModel';
-import { HTTP_STATUSES } from '../utils';
-import { coursesRepository } from '../repositories/coursesDBRepository';
-import { body, validationResult } from 'express-validator';
-import { inputValidationMiddlware } from '../middlewares/middlewares';
+import {CreateCourseModel} from '../models/CreateCourseModel';
+import {UpdateCourseModel} from '../models/UpdateCourseModel';
+import {QueryCoursesModel} from '../models/QueryCoursesModel';
+import {CourseViewModel} from '../models/CourseViewModel';
+import {URIParamsCourseIdModelseViewModel} from '../models/URIParamsCourseIdModel';
+import {HTTP_STATUSES} from '../utils';
+import {coursesRepository} from '../repositories/coursesDBRepository';
+import {body, validationResult} from 'express-validator';
+import {inputValidationMiddlware} from '../middlewares/middlewares';
 
-const titleValidation = body('title').isLength({ min: 1, max: 10 })
+const titleValidation = body('title').isLength({min: 1, max: 10})
     .withMessage('Title length from 1 to 10 symbols.');
 
 export const coursesRouter = Router({});
-
 
 coursesRouter.get('/',
     async (req: RequestWithQuery<QueryCoursesModel>,
@@ -30,8 +29,8 @@ coursesRouter.get('/',
         const foundCourses = await coursesRepository.findCourses(req.query.title?.toString());
 
         res.status(HTTP_STATUSES.OK_200).json(foundCourses);
-    })
-
+    }
+)
 
 coursesRouter.get('/:id',
     async (req: RequestWithParams<URIParamsCourseIdModelseViewModel>,
@@ -45,7 +44,8 @@ coursesRouter.get('/:id',
         } else {
             res.status(HTTP_STATUSES.OK_200).json(foundCourse);
         }
-    })
+    }
+)
 
 coursesRouter.post('/',
     titleValidation,
@@ -105,7 +105,8 @@ coursesRouter.put('/:id',
             const updatedCourse = coursesRepository.findCourseOnId(+req.params.id)
             res.status(HTTP_STATUSES.NO_CONTENT_204).json(updatedCourse);
         }
-    })
+    }
+)
 
 coursesRouter.delete('/:id',
     async (req: RequestWithParams<URIParamsCourseIdModelseViewModel>,
@@ -119,4 +120,5 @@ coursesRouter.delete('/:id',
         } else {
             res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
         }
-    })
+    }
+)

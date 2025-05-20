@@ -1,6 +1,6 @@
 import {client, db, DB_NAME} from '../db/db';
-import { CourseType } from '../db/db';
-import { CourseViewModel } from '../models/CourseViewModel';
+import {CourseType} from '../db/db';
+import {CourseViewModel} from '../models/CourseViewModel';
 
 const getCourseViewModel = (dbCourse: CourseType): CourseViewModel => {
     return {
@@ -11,26 +11,31 @@ const getCourseViewModel = (dbCourse: CourseType): CourseViewModel => {
 
 export const coursesRepository = {
 
-    // async findCourses(title: string | null | undefined) {
-    async findCourses(title: string | null | undefined): Promise<CourseType[]> {
+    async findCourses(title: string | null | undefined): Promise<CourseViewModel[]> {
+        let foundCourses;
 
         if (title) {
-            return client.db(DB_NAME).collection<CourseType>('courses').find({title: {$regex: title}}).toArray();
+            foundCourses = await client.db(DB_NAME).collection<CourseType>('courses')
+                .find({title: {$regex: title}}).toArray();
         } else {
-            return client.db(DB_NAME).collection<CourseType>('courses').find().toArray();
+            foundCourses = await client.db(DB_NAME).collection<CourseType>('courses')
+                .find().toArray();
         }
+
+        return (foundCourses.map(getCourseViewModel));
     },
 
-    async findCourseOnId(id: number) {
-        const foundCourseOnId = db.courses.find(course => course.id === id);
+    async findCourseOnId(id: number): Promise<CourseViewModel | undefined> {
+        const foundCourseOnId: CourseType | null =
+            await client.db(DB_NAME).collection<CourseType>('courses').findOne({id: id});
 
         if (!foundCourseOnId) {
             return undefined;
         } else {
-            return (getCourseViewModel(foundCourseOnId));
+            return getCourseViewModel(foundCourseOnId);
         }
-
     },
+
 
     async createCourse(title: string) {
         const createdCourse: CourseType = {
