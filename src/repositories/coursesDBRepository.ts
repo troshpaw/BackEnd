@@ -52,24 +52,28 @@ export const coursesRepository = {
     },
 
     async updateCourse(id: number, title: string) {
-        const foundCourseOnId = db.courses.find(course => course.id === id);
+        const foundCourseOnId: CourseType | null =
+            await client.db(DB_NAME).collection<CourseType>('courses').findOne({id: id});
 
         if (!foundCourseOnId) {
-            return false;
+            return undefined;
         } else {
-            foundCourseOnId.title = title;
-            return true;
+            const result =
+                await client.db(DB_NAME).collection<CourseType>('courses').updateOne({id: id}, {$set: {title: title}});
+            return result;
         }
     },
 
     async deleteCourse(id: number) {
-        const arrayAfterDelete = db.courses.filter(course => course.id !== id);
+        const foundCourseOnId: CourseType | null =
+            await client.db(DB_NAME).collection<CourseType>('courses').findOne({id: id});
 
-        if (db.courses.length === arrayAfterDelete.length) {
-            return false;
+        if (!foundCourseOnId) {
+            return undefined;
         } else {
-            db.courses = arrayAfterDelete;
-            return true;
+            const result =
+                await client.db(DB_NAME).collection<CourseType>('courses').deleteOne({id: id});
+            return result;
         }
     }
 }

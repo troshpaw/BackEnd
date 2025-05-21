@@ -83,7 +83,6 @@ coursesRouter.put('/:id',
     async (req: Request,
            res: Response) => {
 
-
         // const errors = validationResult(req);
         // if (!errors.isEmpty()) {
         //     // res.status(HTTP_STATUSES.BAD_REQUEST_400).json({ errors: errors.array() });
