@@ -51,10 +51,10 @@ coursesRouter.post('/',
     titleValidation,
     inputValidationMiddlware,
 
-    // (req: RequestWithBody<CreateCourseModel>,
-    // res: Response<CourseViewModel>) => {
-    async (req: Request,
-           res: Response) => {
+    async (req: RequestWithBody<CreateCourseModel>,
+           res: Response<CourseViewModel>) => {
+        // async (req: Request,
+        //        res: Response) => {
 
         // const errors = validationResult(req);
         // if (!errors.isEmpty()) {

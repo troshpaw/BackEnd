@@ -36,19 +36,19 @@ export const coursesRepository = {
         }
     },
 
-
     async createCourse(title: string) {
         const createdCourse: CourseType = {
-            id: db.courses.length > 0
-                ? db.courses[db.courses.length - 1].id + 1
-                : 1,
+            id: 10,
             title: title,
             studentsCount: 0
         }
 
-        db.courses.push(createdCourse);
+        const result =
+            await client.db(DB_NAME).collection<CourseType>('courses').insertOne(createdCourse);
 
-        return (getCourseViewModel(createdCourse));
+        if (result) {
+            return (getCourseViewModel(createdCourse));
+        }
     },
 
     async updateCourse(id: number, title: string) {
