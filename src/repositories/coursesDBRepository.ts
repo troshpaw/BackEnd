@@ -9,30 +9,29 @@ const getCourseViewModel = (dbCourse: CourseType): CourseViewModel => {
     }
 }
 
+const coursesCollection =
+    client.db(DB_NAME).collection<CourseType>('courses');
+
 export const coursesRepository = {
 
     async findCourses(title: string | null | undefined): Promise<CourseViewModel[] | undefined> {
-        let foundCourses;
+        const filter: any = {};
 
         if (title) {
-            foundCourses = await client.db(DB_NAME).collection<CourseType>('courses')
-                .find({title: {$regex: title}}).toArray();
-        } else {
-            foundCourses = await client.db(DB_NAME).collection<CourseType>('courses')
-                .find().toArray();
+            filter.title = {$regex: title};
         }
+
+        const foundCourses = await coursesCollection.find(filter).toArray();
 
         if (!foundCourses) {
             return undefined;
         } else {
             return (foundCourses.map(getCourseViewModel));
         }
-
     },
 
     async findCourseOnId(id: number): Promise<CourseViewModel | undefined> {
-        const foundCourseOnId: CourseType | null =
-            await client.db(DB_NAME).collection<CourseType>('courses').findOne({id: id});
+        const foundCourseOnId: CourseType | null = await coursesCollection.findOne({id: id});
 
         if (!foundCourseOnId) {
             return undefined;
@@ -42,8 +41,7 @@ export const coursesRepository = {
     },
 
     async createCourse(createdCourse: CourseType): Promise<CourseViewModel | undefined> {
-        const result =
-            await client.db(DB_NAME).collection<CourseType>('courses').insertOne(createdCourse);
+        const result = await coursesCollection.insertOne(createdCourse);
 
         if (!result) {
             return undefined;
@@ -53,27 +51,24 @@ export const coursesRepository = {
     },
 
     async updateCourse(id: number, title: string) {
-        const foundCourseOnId: CourseType | null =
-            await client.db(DB_NAME).collection<CourseType>('courses').findOne({id: id});
+        const foundCourseOnId: CourseType | null = await coursesCollection.findOne({id: id});
 
         if (!foundCourseOnId) {
             return undefined;
         } else {
-            const result = await client.db(DB_NAME).collection<CourseType>('courses')
-                .updateOne({id: id}, {$set: {title: title}});
+            const result =
+                await coursesCollection.updateOne({id: id}, {$set: {title: title}});
             return result;
         }
     },
 
     async deleteCourse(id: number) {
-        const foundCourseOnId: CourseType | null =
-            await client.db(DB_NAME).collection<CourseType>('courses').findOne({id: id});
+        const foundCourseOnId: CourseType | null = await coursesCollection.findOne({id: id});
 
         if (!foundCourseOnId) {
             return undefined;
         } else {
-            const result = await client.db(DB_NAME).collection<CourseType>('courses')
-                .deleteOne({id: id});
+            const result = await coursesCollection.deleteOne({id: id});
             return result;
         }
     }
