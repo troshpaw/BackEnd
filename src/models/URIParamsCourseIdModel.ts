@@ -1,4 +1,4 @@
-export type URIParamsCourseIdModelseViewModel = {
+export type URIParamsCourseIdModelsViewModel = {
     /**
     * id of existing course
     */

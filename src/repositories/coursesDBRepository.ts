@@ -11,7 +11,7 @@ const getCourseViewModel = (dbCourse: CourseType): CourseViewModel => {
 
 export const coursesRepository = {
 
-    async findCourses(title: string | null | undefined): Promise<CourseViewModel[]> {
+    async findCourses(title: string | null | undefined): Promise<CourseViewModel[] | undefined> {
         let foundCourses;
 
         if (title) {
@@ -22,7 +22,12 @@ export const coursesRepository = {
                 .find().toArray();
         }
 
-        return (foundCourses.map(getCourseViewModel));
+        if (!foundCourses) {
+            return undefined;
+        } else {
+            return (foundCourses.map(getCourseViewModel));
+        }
+
     },
 
     async findCourseOnId(id: number): Promise<CourseViewModel | undefined> {
@@ -36,17 +41,13 @@ export const coursesRepository = {
         }
     },
 
-    async createCourse(title: string) {
-        const createdCourse: CourseType = {
-            id: 10,
-            title: title,
-            studentsCount: 0
-        }
-
+    async createCourse(createdCourse: CourseType): Promise<CourseViewModel | undefined> {
         const result =
             await client.db(DB_NAME).collection<CourseType>('courses').insertOne(createdCourse);
 
-        if (result) {
+        if (!result) {
+            return undefined;
+        } else {
             return (getCourseViewModel(createdCourse));
         }
     },
@@ -58,8 +59,8 @@ export const coursesRepository = {
         if (!foundCourseOnId) {
             return undefined;
         } else {
-            const result =
-                await client.db(DB_NAME).collection<CourseType>('courses').updateOne({id: id}, {$set: {title: title}});
+            const result = await client.db(DB_NAME).collection<CourseType>('courses')
+                .updateOne({id: id}, {$set: {title: title}});
             return result;
         }
     },
@@ -71,8 +72,8 @@ export const coursesRepository = {
         if (!foundCourseOnId) {
             return undefined;
         } else {
-            const result =
-                await client.db(DB_NAME).collection<CourseType>('courses').deleteOne({id: id});
+            const result = await client.db(DB_NAME).collection<CourseType>('courses')
+                .deleteOne({id: id});
             return result;
         }
     }
