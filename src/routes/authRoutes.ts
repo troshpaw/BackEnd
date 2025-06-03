@@ -3,7 +3,7 @@ import {Router} from "express";
 import {usersService} from "../service/usersService";
 import {HTTP_STATUSES} from '../utils';
 
-export const usersRouter = Router({});
+export const authRouter = Router({});
 
 // usersRouter.get('/',
 //     async (req: Request, res: Response) => {}
@@ -13,15 +13,15 @@ export const usersRouter = Router({});
 //     async (req: Request, res: Response) => {}
 // )
 
-usersRouter.post('/',
+authRouter.post('/',
     async (req: Request, res: Response) => {
-        const result =
-            await usersService.createUser(req.body.login, req.body.email, req.body.password);
+        const checkResult =
+            await usersService.checkCredentials(req.body.loginOrEmail, req.body.password);
 
-        if (!result) {
-            res.send(HTTP_STATUSES.NO_CONTENT_204);
+        if (!checkResult) {
+            res.send(HTTP_STATUSES.UNAUTHORIZED_401);
         } else {
-            res.send(HTTP_STATUSES.CREATED_201);
+            res.send(HTTP_STATUSES.OK_200);
         }
     }
 )
