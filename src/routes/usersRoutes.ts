@@ -1,6 +1,7 @@
 import {Request, Response} from 'express';
 import {Router} from "express";
 import {usersService} from "../service/usersService";
+import {HTTP_STATUSES} from '../utils';
 
 export const usersRouter = Router({});
 
@@ -13,9 +14,15 @@ export const usersRouter = Router({});
 // )
 
 usersRouter.post('/',
-    async (req: Request, res: Response) => {
-        const createdUser =
+    async (req: any, res: any) => {
+        const result =
             await usersService.createUser(req.body.login, req.body.password, req.body.email);
+
+        if (!result) {
+            res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+        } else {
+            res.sendStatus(HTTP_STATUSES.CREATED_201);
+        }
     }
 )
 

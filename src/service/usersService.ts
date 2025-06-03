@@ -9,7 +9,7 @@ export const usersService = {
             email: email
         }
 
-        await usersRepository.createUser(newUser);
+        return await usersRepository.createUser(newUser);
     },
 
     // async checkCredentials() {},
