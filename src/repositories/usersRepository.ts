@@ -8,10 +8,8 @@ export const usersRepository = {
     },
 
     async findByLoginOrEmail(loginOrEmail: string) {
-        // const user =
-        //     await usersCollection.findOne({$or: [{email: loginOrEmail}, {userName: loginOrEmail}]});
         const user =
-            await usersCollection.findOne({userName: loginOrEmail});
+            await usersCollection.findOne({$or: [{email: loginOrEmail}, {userName: loginOrEmail}]});
 
         return user;
     }
