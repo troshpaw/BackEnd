@@ -61,7 +61,11 @@ export const usersService = {
         const passwordHash = user.passwordHash;
         const passwordIsValid = await this._verifyPassword(password, passwordHash);
 
-        return passwordIsValid;
+        if (!passwordIsValid) {
+            return false;
+        } else {
+            return user;
+        }
     },
 
     // async _generateHash(password: string, salt: string) {
@@ -76,7 +80,7 @@ export const usersService = {
         return hash;
     },
 
-    async _verifyPassword(password: string, passwordHash: string) {
+    async _verifyPassword(password: string, passwordHash: string): Promise<boolean | undefined> {
         return new Promise((resolve) => {
             bcrypt.compare(password, passwordHash, (err, result) => {
                 if (err) {

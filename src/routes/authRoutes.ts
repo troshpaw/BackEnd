@@ -13,12 +13,12 @@ export const authRouter = Router({});
 //     async (req: Request, res: Response) => {}
 // )
 
-authRouter.post('/',
+authRouter.post('/login',
     async (req: Request, res: Response) => {
-        const checkResult =
+        const user =
             await usersService.checkCredentials(req.body.loginOrEmail, req.body.password);
 
-        if (!checkResult) {
+        if (!user) {
             res.send(HTTP_STATUSES.UNAUTHORIZED_401);
         } else {
             res.send(HTTP_STATUSES.OK_200);
