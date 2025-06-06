@@ -1,7 +1,7 @@
-import { NextFunction } from 'express';
-import { Request, Response } from 'express';
-import { validationResult } from 'express-validator';
-import { HTTP_STATUSES } from '../utils';
+import {NextFunction} from 'express';
+import {Request, Response} from 'express';
+import {validationResult} from 'express-validator';
+import {HTTP_STATUSES} from '../utils';
 
 ///////// Middleware - lesson 19 /////////
 
@@ -56,15 +56,27 @@ export const authGuardMiddleware = (req: Request, res: Response, next: NextFunct
 //     res.json({ message: 'Hello!' + ' ' + 'Requests: ' + requestCount });
 // })
 
-
 ////////////////// Lesson 20 //////////////////
 
-export const inputValidationMiddlware = (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        res.status(HTTP_STATUSES.BAD_REQUEST_400).json({ errors: errors.array() });
-        // res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
-    } else {
-        next();
+export const inputValidationMiddlware =
+    (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(HTTP_STATUSES.BAD_REQUEST_400).json({errors: errors.array()});
+            // res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+        } else {
+            next();
+        }
     }
-}
+
+////////////////// Lesson 32 //////////////////
+
+export const authMiddleware =
+    (req: Request, res: Response, next: NextFunction) => {
+
+        if (req.query.token === "123") {
+            next();
+        } else {
+            res.sendStatus(401);
+        }
+    }

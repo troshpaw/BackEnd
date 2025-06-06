@@ -34,7 +34,15 @@ export const db: DBType = {
     ]
 }
 
+export type UserInputType = {
+    userName: string,
+    email: string,
+    passwordHash: string,
+    createdAt: number
+}
+
 export type UserDBType = {
+    _id: string,
     userName: string,
     email: string,
     passwordHash: string,

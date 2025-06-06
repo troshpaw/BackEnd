@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import {usersRepository} from "../repositories/usersRepository";
-import {UserDBType} from "../db/db";
+import {UserInputType} from "../db/db";
 
 export const usersService = {
     // async createUser(login: string, email: string, password: string) {
@@ -18,10 +18,10 @@ export const usersService = {
     //     return await usersRepository.createUser(newUser);
     // },
 
-    async createUser(login: string, email: string, password: string) {
+    async createUser(login: string, email: string, password: string)  {
         const passwordHash = await this._generateHash(password);
 
-        const newUser: UserDBType = {
+        const newUser: UserInputType = {
             userName: login,
             email,
             passwordHash,

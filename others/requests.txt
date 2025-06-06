@@ -23,3 +23,11 @@ fetch('http://localhost:3001/auth/login', {
 })
 .then(response => response.json())
 .then(json => console.log(json))
+
+fetch('http://localhost:3001/auth/...', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json;charset=utf-8' },
+    body: JSON.stringify({ loginOrEmail: 'login', password: 'password' })
+})
+.then(response => response.json())
+.then(json => console.log(json))
