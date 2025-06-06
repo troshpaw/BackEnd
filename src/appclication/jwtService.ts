@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import {settings} from "../settings";
+import {ObjectId} from "mongodb";
 
 // const JWT_SECRET = process.env.JWT_SECRET || '123';
 
@@ -12,8 +13,7 @@ export const jwtService = {
     async getUserIdByToken(token: string) {
         try {
             const result: any = await jwt.verify(token, settings.JWT_SECRET);
-            // return new ObjectId(result);
-            return result.userId;
+            return new ObjectId(result);
         } catch (error) {
             return null;
         }

@@ -2,6 +2,7 @@ import {NextFunction} from 'express';
 import {Request, Response} from 'express';
 import {validationResult} from 'express-validator';
 import {HTTP_STATUSES} from '../utils';
+import {jwtService} from "../appclication/jwtService";
 
 ///////// Middleware - lesson 19 /////////
 
@@ -72,11 +73,12 @@ export const inputValidationMiddlware =
 ////////////////// Lesson 32 //////////////////
 
 export const authMiddleware =
-    (req: Request, res: Response, next: NextFunction) => {
-
-        if (req.query.token === "123") {
+    async (req: any, res: Response, next: NextFunction) => {
+        const token = req.headers.authorization.split(' ')[1];
+        const result = await jwtService.getUserIdByToken(token);
+        if (result) {
             next();
         } else {
-            res.sendStatus(401);
+            res.sendStatus(HTTP_STATUSES.UNAUTHORIZED_401);
         }
     }
