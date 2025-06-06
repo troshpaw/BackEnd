@@ -9,8 +9,9 @@ export const feedbackRouter = Router({});
 feedbackRouter.post('/', authMiddleware,
     async (req: Request, res: Response) => {
         const feedbackIsSend =
-            await feedbackService.sendFeedback(req.body.comment, req.body.user._id);
+            await feedbackService.sendFeedback(req.body.comment, req.body.user);
         if (feedbackIsSend) {
-            res.sendStatus(HTTP_STATUSES.CREATED_201);
+            console.log('The feedback was left: ' + req.body.user.userName);
+            res.send(HTTP_STATUSES.CREATED_201);
         }
-    });
+    })

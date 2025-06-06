@@ -44,7 +44,7 @@ export const coursesRepository = {
     async createCourse(createdCourse: CourseType): Promise<CourseViewModel | undefined> {
         const result = await coursesCollection.insertOne(createdCourse);
 
-        if (!result) {
+        if (!result.acknowledged) {
             return undefined;
         } else {
             return (getCourseViewModel(createdCourse));

@@ -3,6 +3,10 @@ import {usersRepository} from "../repositories/usersRepository";
 import {UserInputType} from "../db/db";
 
 export const usersService = {
+    async findUserByUserId(userId: string) {
+        return await usersRepository.findUserByUserId(userId);
+    },
+
     // async createUser(login: string, email: string, password: string) {
     //     const passwordSalt = await bcrypt.genSalt(10);
     //     const passwordHash = await this._generateHash(password, passwordSalt);

@@ -1,4 +1,4 @@
-import {MongoClient} from "mongodb";
+import {MongoClient, ObjectId} from "mongodb";
 import {settings} from "../settings";
 
 // const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017';
@@ -42,9 +42,9 @@ export type UserInputType = {
 }
 
 export type UserDBType = {
-    _id: string,
+    _id: ObjectId,
     userName: string,
     email: string,
     passwordHash: string,
-    createdAt: number
-}
+    createdAt: Date
+};

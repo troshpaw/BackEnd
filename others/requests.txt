@@ -10,7 +10,7 @@ fetch('http://localhost:3001/courses', {
 fetch('http://localhost:3001/users', {
     method: 'POST',
     headers: { 'content-type': 'application/json;charset=utf-8' },
-    body: JSON.stringify({ login: 'login', email: 'email', password: 'password' })
+    body: JSON.stringify({ login: 'Login', email: 'Email', password: 'Password' })
 })
 .then(response => response.json())
 .then(json => console.log(json))
@@ -19,7 +19,7 @@ fetch('http://localhost:3001/users', {
 fetch('http://localhost:3001/auth/login', {
     method: 'POST',
     headers: { 'content-type': 'application/json;charset=utf-8' },
-    body: JSON.stringify({ loginOrEmail: 'login', password: 'password' })
+    body: JSON.stringify({ loginOrEmail: 'Login', password: 'Password' })
 })
 .then(response => response.json())
 .then(json => console.log(json))
@@ -29,7 +29,7 @@ fetch('http://localhost:3001/feedbacks', {
     method: 'POST',
     headers: {
         'content-type': 'application/json;charset=utf-8',
-        'authorization': 'bearer '
+        'authorization': 'bearer token'
     },
     body: JSON.stringify({ loginOrEmail: 'login', password: 'password' })
 })

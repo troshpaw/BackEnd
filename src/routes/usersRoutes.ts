@@ -5,9 +5,11 @@ import {HTTP_STATUSES} from '../utils';
 
 export const usersRouter = Router({});
 
-// usersRouter.get('/',
-//     async (req: Request, res: Response) => {}
-// )
+usersRouter.get('/',
+    async (req: Request, res: Response) => {
+        res.sendStatus(HTTP_STATUSES.OK_200);
+    }
+)
 
 // usersRouter.get('/:id',
 //     async (req: Request, res: Response) => {}
