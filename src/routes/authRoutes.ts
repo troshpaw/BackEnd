@@ -1,7 +1,8 @@
 import {Request, Response} from 'express';
 import {Router} from "express";
-import {usersService} from "../service/usersService";
+import {usersService} from "../domain/usersService";
 import {HTTP_STATUSES} from '../utils';
+import {jwtService} from "../appclication/jwtService";
 
 export const authRouter = Router({});
 
@@ -21,7 +22,8 @@ authRouter.post('/login',
         if (!user) {
             res.send(HTTP_STATUSES.UNAUTHORIZED_401);
         } else {
-            res.send(HTTP_STATUSES.OK_200);
+            const token = await jwtService.createJWT(user);
+            res.status(HTTP_STATUSES.CREATED_201).json(token);
         }
     }
 )

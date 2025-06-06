@@ -1,4 +1,5 @@
-import {client, db, DB_NAME} from '../db/db';
+import {client, db} from '../db/db';
+import {settings} from "../settings";
 import {CourseType} from '../db/db';
 import {CourseViewModel} from '../models/CourseViewModel';
 
@@ -10,7 +11,7 @@ const getCourseViewModel = (dbCourse: CourseType): CourseViewModel => {
 }
 
 const coursesCollection =
-    client.db(DB_NAME).collection<CourseType>('courses');
+    client.db(settings.DB_NAME).collection<CourseType>('courses');
 
 export const coursesRepository = {
 

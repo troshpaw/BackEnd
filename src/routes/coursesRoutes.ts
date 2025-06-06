@@ -15,7 +15,7 @@ import {HTTP_STATUSES} from '../utils';
 import {coursesRepository} from '../repositories/coursesDBRepository';
 import {body, validationResult} from 'express-validator';
 import {inputValidationMiddlware} from '../middlewares/middlewares';
-import {coursesService} from "../service/coursesService";
+import {coursesService} from "../domain/coursesService";
 
 const titleValidation = body('title').isLength({min: 1, max: 10})
     .withMessage('Title length from 1 to 10 symbols.');

@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import {Router} from "express";
-import {usersService} from "../service/usersService";
+import {usersService} from "../domain/usersService";
 import {HTTP_STATUSES} from '../utils';
 
 export const usersRouter = Router({});

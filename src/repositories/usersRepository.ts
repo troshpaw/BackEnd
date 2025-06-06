@@ -1,9 +1,10 @@
-import {client, DB_NAME} from '../db/db';
+import {client, UserDBType} from '../db/db';
+import {settings} from "../settings";
 
-const usersCollection = client.db(DB_NAME).collection('users');
+const usersCollection = client.db(settings.DB_NAME).collection('users');
 
 export const usersRepository = {
-    async createUser(newUser: any) {
+    async createUser(newUser: UserDBType) {
         return await usersCollection.insertOne(newUser);
     },
 
